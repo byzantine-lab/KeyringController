@@ -39,6 +39,7 @@ class KeyringController extends EventEmitter {
     this.encryptor = opts.encryptor || encryptor
     this.keyrings = []
     this.getNetwork = opts.getNetwork
+    this.hdPath = opts.hdPath || `m/44'/60'/0'/0` // default to ETH hdPath
   }
 
   // Full Update
@@ -98,6 +99,7 @@ class KeyringController extends EventEmitter {
       return this.addNewKeyring('HD Key Tree', {
         mnemonic: seed,
         numberOfAccounts: 1,
+        hdPath: this.hdPath,
       })
     })
     .then((firstKeyring) => {
@@ -358,7 +360,7 @@ class KeyringController extends EventEmitter {
   // puts the current seed words into the state tree.
   createFirstKeyTree () {
     this.clearKeyrings()
-    return this.addNewKeyring('HD Key Tree', { numberOfAccounts: 1 })
+    return this.addNewKeyring('HD Key Tree', { numberOfAccounts: 1, hdPath: this.hdPath })
     .then((keyring) => {
       return keyring.getAccounts()
     })
